@@ -1,2 +1,6 @@
+# ignore modules
 node_modules/
 build/
+
+# ignore credentials
+.env
