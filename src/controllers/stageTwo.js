@@ -1,6 +1,6 @@
 import {
   failed,
-  getOperator, respond, solveArithmetic, success,
+  getOperator, solveArithmetic, success,
 } from '../utils/libs';
 
 const calculate = async (req, res) => {
