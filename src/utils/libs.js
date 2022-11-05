@@ -6,8 +6,12 @@ const operationType = Object.freeze({
 
 const returnSchema = (type, data) => ({ type, data });
 
-export const respond = (status) => (data) => (res) => res
+export const failed = (status) => (message) => (res) => res
   .status(status)
+  .send({ Error: message });
+
+export const success = (data) => (res) => res
+  .status(200)
   .send(data);
 
 export const getOperator = (data) => {

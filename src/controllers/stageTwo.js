@@ -1,16 +1,13 @@
-import { getOperator, respond, solveArithmetic } from '../utils/libs';
+import {
+  failed,
+  getOperator, respond, solveArithmetic, success,
+} from '../utils/libs';
 
 const calculate = async (req, res) => {
   const data = req.body;
 
   if (!data.operation_type) {
-    return res.status(422).send({
-      status: 400,
-      error: {
-        type: 'Bad Request',
-        message: 'Empty request body',
-      },
-    });
+    return failed(400)('No operator type')(res);
   }
 
   const operator = getOperator(data);
@@ -23,9 +20,9 @@ const calculate = async (req, res) => {
   };
 
   if (!result?.type) {
-    return respond(422)(result?.data)(res);
+    return failed(400)('Invalid operator type')(res);
   }
-  return respond(200)(slackResponse)(res);
+  return success(slackResponse)(res);
 };
 
 export default calculate;
