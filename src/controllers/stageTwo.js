@@ -1,6 +1,6 @@
 import {
   failed,
-  getOperator, solveArithmetic, success,
+  getOperator, solveArithmetic, solveWordProblem, success,
 } from '../utils/libs';
 
 const calculate = async (req, res) => {
@@ -13,16 +13,25 @@ const calculate = async (req, res) => {
   const operator = getOperator(data);
   const { x, y } = data;
   const result = await solveArithmetic(operator)(x)(y);
+
   const slackResponse = {
     slackUsername: 'DDC',
-    result: result.data,
+    result: result.result,
     operation_type: operator,
   };
 
-  if (!result?.type) {
-    return failed(400)('Invalid operator type')(res);
+  if (result?.type) {
+    return success(slackResponse)(res);
   }
-  return success(slackResponse)(res);
+
+  const solution = await solveWordProblem(operator);
+
+  if (solution?.type) {
+    slackResponse.operation_type = solution.operation;
+    slackResponse.result = solution.result;
+    return success(slackResponse)(res);
+  }
+  return failed(422)(solution.result)(res);
 };
 
 export default calculate;
